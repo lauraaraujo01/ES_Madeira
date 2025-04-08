@@ -13,9 +13,9 @@ Projeto desenvolvido no âmbito da unidade curricular [Engenharia de Software], 
   - Número de Estudante: [112064]  
   - GitHub: [@username2](https://github.com/biapaixao53)  
 
-  - Nome: [Inês Sampaio]  
-  - Número de Estudante: []  
-  - GitHub: [@username2]()  
+- Nome: [Inês Sampaio]  
+  - Número de Estudante: [104015]  
+  - GitHub: [@igpbs](https://github.com/igpbs)  
 
 ## Erros Conhecidos
 - [Descrição do erro 1]  
