@@ -11,7 +11,7 @@ Projeto desenvolvido no âmbito da unidade curricular [Engenharia de Software], 
 
 - Nome: [Beatriz Paixão]  
   - Número de Estudante: [112064]  
-  - GitHub: [@username2](https://github.com/biapaixao53)  
+  - GitHub: [@biapaixao53](https://github.com/biapaixao53)  
 
 - Nome: [Inês Sampaio]  
   - Número de Estudante: [104015]  
