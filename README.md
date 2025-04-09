@@ -1,7 +1,7 @@
 # Projeto XYZ
 
 ## Identificação do Grupo
-Grupo: [Engenharia de Software Grupo de Trabalho]  
+Grupo: [Engenharia de Software Grupo de Trabalho 2]  
 Projeto desenvolvido no âmbito da unidade curricular [Engenharia de Software], [ISCTE-IUL].  
 
 ## Membros do Grupo
@@ -17,12 +17,9 @@ Projeto desenvolvido no âmbito da unidade curricular [Engenharia de Software], 
   - Número de Estudante: [104015]  
   - GitHub: [@igpbs](https://github.com/igpbs)  
 
-## Erros Conhecidos
-- [Descrição do erro 1]  
-- [Descrição do erro 2]  
-- [Descrição do erro 3]  
+## Descrição Inicial do Projeto
+- Este projeto teve como objetivo a análise inicial dos dados de propriedades rústicas da região 
+autónoma da Madeira e a contrução de um Grafo que identificasse as relações entre essas propriedades.
 
-## Funcionalidades Não Implementadas ou Incompletas
-- [Descrição da funcionalidade 1]  
-- [Descrição da funcionalidade 2]  
-- [Descrição da funcionalidade 3]
+## Linguagem utilizada
+- Python: Linguagem principal utilizada para manipulação de dados, construção do grafo e leitura dO ficheiro CSV.
