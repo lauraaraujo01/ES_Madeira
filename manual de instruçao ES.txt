@@ -1,0 +1,47 @@
+manual de istruçao ES
+
+
+Python 3.13 ainda está em desenvolvimento (não oficialmente finalizado), e muitas bibliotecas (como networkx) não são ainda compatíveis ou testadas com esta versão. Recomendo, se possível, usares:
+
+Python 3.11 ou
+
+Python 3.10, que têm total compatibilidade com estas bibliotecas.
+
+
+🔄 1. Instalar Python 3.11 (estável e compatível)
+Vai ao site:
+👉 https://www.python.org/downloads/release/python-3110/
+
+Faz download do instalador.
+
+Na instalação, marca a opção “Add Python to PATH”.
+SE VOCES JA TIVEREM O VEN311 NO VOSSO REPOSITORIO NAO TEM QUE CRIAR O AMBIENTE VIRTUAL, SO TEM QUE INTALAR O PYTHON 3.11 E MUDAR O INTERPETER + REQUIREMETS.TXT. 
+
+Instala normalmente.
+
+
+
+
+
+A partir de agora devera o projeto ser corrido no ven. no terminal devera aparecer assim:
+bash  .\venv311\Scripts\activate -> comando para tivar
+(venv311) PS C:\Users\beatr\Documents\GitHub\ES_Madeira>
+
+mudar o Python: Select Interpreter para  .\venv311\Scripts\python.exe com crl +sft +p  
+📦 3. Instalar as dependências necessárias
+bash
+
+pip install -r requirements.txt -->    é um ficheiro onde se mete as bliblioteca necessárias para o projeto. VAO atualizando sempre que é necessário uma nova biblioteca. ISTO Á PARTIDA DEVE FAZER A MESMA FUNÇAO QUE O MAVEM, NOT SURE
+
+▶️ 4. Corre novamente o script
+Agora podes correr:
+
+bash
+
+python grafoProprietarios.py
+E o grafo vai aparecer visualmente, sem erros.
+
+PARA TESTAR O COMANDO é:
+python -m pytest testGrafoProprietarios.py
+
+DEPOIS temos que fazer para dar para correr todos

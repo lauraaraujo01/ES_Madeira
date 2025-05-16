@@ -2,32 +2,37 @@ import csv
 from collections import defaultdict
 from itertools import combinations
 
-# Armazenamento
-propriedade_para_dono = {}
-freguesia_para_propriedades = defaultdict(list)
+def construir_grafo_propriedades(dados_csv):
+    propriedade_para_dono = {}
+    freguesia_para_propriedades = defaultdict(list)
 
-# Leitura do ficheiro CSV
-with open("Madeira-Moodle-1.1.csv", newline='', encoding="utf-8") as csvfile:
-    leitor = csv.DictReader(csvfile, delimiter=';')
-    for linha in leitor:
-        par_id = linha['PAR_ID']
-        dono = linha['OWNER']
-        freguesia = linha['Freguesia']
-
-        propriedade_para_dono[par_id] = dono
-# Agrupar propriedades por freguesia
+    # Agrupar os dados
+    for linha in dados_csv:
+        par_id = linha["PAR_ID"]
+        freguesia = linha["Freguesia"]
+        propriedade_para_dono[par_id] = linha["OWNER"]
         freguesia_para_propriedades[freguesia].append(par_id)
 
-# Simulação de vizinhança: propriedades da mesma freguesia são vizinhas
-grafo_propriedades = defaultdict(set)
+    grafo_propriedades = defaultdict(set)
 
-for propriedades in freguesia_para_propriedades.values():
-    # Para cada par de propriedades na mesma freguesia
-    for prop1, prop2 in combinations(propriedades, 2):
-        # Se as propriedades são diferentes, adicionamos uma aresta entre elas
-        grafo_propriedades[prop1].add(prop2)
-        grafo_propriedades[prop2].add(prop1)
+    for propriedades in freguesia_para_propriedades.values():
+        for prop1, prop2 in combinations(propriedades, 2):
+            grafo_propriedades[prop1].add(prop2)
+            grafo_propriedades[prop2].add(prop1)
 
-# Exemplo de saída: Exibe as relações de adjacência entre as propriedades
-for propriedade, vizinhas in grafo_propriedades.items():
-    print(f"Propriedade {propriedade} tem as vizinhas: {', '.join(vizinhas)}")
+    return grafo_propriedades
+
+
+def ler_csv(caminho_ficheiro):
+    with open(caminho_ficheiro, newline='', encoding="utf-8") as csvfile:
+        leitor = csv.DictReader(csvfile, delimiter=';')
+        return list(leitor)
+
+
+if __name__ == "__main__":
+    # Apenas executa isto se correr o ficheiro diretamente (não quando fizer import nos testes)
+    dados_csv = ler_csv("Madeira-Moodle-1.1.csv")
+    grafo = construir_grafo_propriedades(dados_csv)
+
+    for propriedade, vizinhas in grafo.items():
+        print(f"Propriedade {propriedade} tem as vizinhas: {', '.join(vizinhas)}")
