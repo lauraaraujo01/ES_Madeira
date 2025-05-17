@@ -24,6 +24,5 @@ jobs:
           pip install pytest pytest-cov
 
       - name: Correr os testes
-        run: |
-          cd ES_Madeira
+        run: 
           pytest --cov=. --cov-report=term-missing
