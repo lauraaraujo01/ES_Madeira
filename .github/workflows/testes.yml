@@ -25,4 +25,5 @@ jobs:
 
       - name: Correr os testes
         run: |
+          cd ..
           pytest --cov=. --cov-report=term-missing
