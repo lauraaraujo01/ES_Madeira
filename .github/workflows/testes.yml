@@ -1,28 +1,27 @@
-name: Testar com Pytest
+name: Python CI
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push, pull_request]
 
 jobs:
-  testar-python:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Clonar repositório
-      uses: actions/checkout@v3
+      - name: Clonar repositório
+        uses: actions/checkout@v3
 
-    - name: Configurar Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-    - name: Instalar dependências
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
 
-    - name: Correr os testes
-      run: pytest
+      - name: Correr os testes
+        run: |
+          pytest --cov=. --cov-report=term-missing
+  
