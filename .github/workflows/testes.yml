@@ -25,5 +25,5 @@ jobs:
 
       - name: Correr os testes
         run: |
-          cd ..
+          cd ES_Madeira
           pytest --cov=. --cov-report=term-missing
