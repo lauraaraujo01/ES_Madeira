@@ -79,7 +79,7 @@ def desenhar_grafo(grafo):
     plt.show()
 
 if __name__ == "__main__":
-    dados = ler_csv("Madeira-Moodle-1.1.csv")
+    dados = ler_csv("Madeira-Moodle-1.2.csv")
     grafo = construir_grafo_proprietarios(dados)
 
     for dono, vizinhos in grafo.items():
