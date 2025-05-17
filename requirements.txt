@@ -1,0 +1,6 @@
+networkx==2.8
+matplotlib
+pytest
+pytest-cov
+scipy
+pandas
