@@ -1,35 +1,48 @@
 import csv
+from shapely import wkt
+from shapely.geometry import Polygon, MultiPolygon
 from collections import defaultdict
-from itertools import combinations
 import networkx as nx
 import matplotlib.pyplot as plt
 
 def construir_grafo_propriedades(dados_csv):
-    propriedade_para_dono = {}
-    freguesia_para_propriedades = defaultdict(list)
+    geometria_por_parcela = {}
+    grafo = nx.Graph()
 
-    # Agrupar os dados
+    # 1. Converter WKT → objeto geométrico Shapely
     for linha in dados_csv:
         par_id = linha["PAR_ID"]
-        freguesia = linha["Freguesia"]
-        propriedade_para_dono[par_id] = linha["OWNER"]
-        freguesia_para_propriedades[freguesia].append(par_id)
+        try:
+            geom = wkt.loads(linha["geometry"])
+            geometria_por_parcela[par_id] = geom
+            grafo.add_node(par_id)
+        except Exception as e:
+            print(f"Erro ao processar geometria da parcela {par_id}: {e}")
 
-    grafo_propriedades = defaultdict(set)
+    # 2. Verificar adjacência real entre todas as geometrias
+    lista_parcelas = list(geometria_por_parcela.items())
+    for i in range(len(lista_parcelas)):
+        id1, geom1 = lista_parcelas[i]
+        for j in range(i + 1, len(lista_parcelas)):
+            id2, geom2 = lista_parcelas[j]
+            if geom1.intersects(geom2): 
+                grafo.add_edge(id1, id2)
 
-    for propriedades in freguesia_para_propriedades.values():
-        for prop1, prop2 in combinations(propriedades, 2):
-            grafo_propriedades[prop1].add(prop2)
-            grafo_propriedades[prop2].add(prop1)
+    # 3. Converter para defaultdict(set) para manter compatibilidade com desenhar_grafo
+    grafo_dict = defaultdict(set)
 
-    return grafo_propriedades
+    for a, b in grafo.edges:
+        grafo_dict[a].add(b)
+        grafo_dict[b].add(a)
+
+    return grafo_dict
 
 def ler_csv(caminho_ficheiro):
     with open(caminho_ficheiro, newline='', encoding="utf-8") as csvfile:
         leitor = csv.DictReader(csvfile, delimiter=';')
         return list(leitor)
 
-def desenhar_grafo(grafo):
+def desenhar_grafo(grafo, mostrar=True):
     G = nx.Graph()
     for prop, vizinhas in grafo.items():
         for vizinha in vizinhas:
@@ -60,13 +73,16 @@ def desenhar_grafo(grafo):
     ax.set_title("Grafo de Adjacência entre Propriedades", fontsize=16)
     ax.set_axis_off()
     plt.tight_layout()
-    plt.show()
+    if mostrar:
+        plt.show()
+    else:
+        plt.close()
 
 if __name__ == "__main__":
     dados_csv = ler_csv("Madeira-Moodle-1.2.csv")
     grafo = construir_grafo_propriedades(dados_csv)
 
-    for propriedade, vizinhas in grafo.items():
-        print(f"Propriedade {propriedade} tem as vizinhas: {', '.join(vizinhas)}")
+    #for propriedade, vizinhas in grafo.items():
+     #   print(f"Propriedade {propriedade} tem as vizinhas: {', '.join(vizinhas)}")
 
     desenhar_grafo(grafo)

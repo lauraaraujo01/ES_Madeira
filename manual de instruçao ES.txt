@@ -42,6 +42,9 @@ python grafoProprietarios.py
 E o grafo vai aparecer visualmente, sem erros.
 
 PARA TESTAR O COMANDO é:
-python -m pytest testGrafoProprietarios.py
+ bash python -m pytest -v --cov=grafoPropriedades testGrafoPropriedades.py
 
+para aparecer o relatorio num html sera
+bash python -m pytest --cov=grafoPropriedades --cov-report=html testGrafoPropriedades.py
+bash htmlcov/index.html
 DEPOIS temos que fazer para dar para correr todos

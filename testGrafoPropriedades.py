@@ -1,41 +1,90 @@
 import pytest
-from grafoPropriedades import construir_grafo_propriedades
+from grafoPropriedades import construir_grafo_propriedades, desenhar_grafo
 
-def test_grafo_simples():
+def test_grafo_intersecta_sobreposicao():
     dados = [
-        {"PAR_ID": "1", "OWNER": "João", "Freguesia": "A"},
-        {"PAR_ID": "2", "OWNER": "Maria", "Freguesia": "A"},
-        {"PAR_ID": "3", "OWNER": "Carlos", "Freguesia": "B"},
-        {"PAR_ID": "4", "OWNER": "Ana", "Freguesia": "B"},
-        {"PAR_ID": "5", "OWNER": "Rui", "Freguesia": "C"},
+        {
+            "PAR_ID": "A",
+            "OWNER": "X",
+            "Freguesia": "F1",
+            "geometry": "MULTIPOLYGON (((0 0, 2 0, 2 2, 0 2, 0 0)))"
+        },
+        {
+            "PAR_ID": "B",
+            "OWNER": "Y",
+            "Freguesia": "F1",
+            "geometry": "MULTIPOLYGON (((0.5 0.5, 1.5 0.5, 1.5 1.5, 0.5 1.5, 0.5 0.5)))"
+        },
+        {
+            "PAR_ID": "C",
+            "OWNER": "Z",
+            "Freguesia": "F1",
+            "geometry": "MULTIPOLYGON (((5 5, 6 5, 6 6, 5 6, 5 5)))"
+        }
     ]
 
     grafo = construir_grafo_propriedades(dados)
 
-    assert grafo["1"] == {"2"}
-    assert grafo["2"] == {"1"}
-    assert grafo["3"] == {"4"}
-    assert grafo["4"] == {"3"}
-    assert "5" not in grafo or grafo["5"] == set()
+    # A e B sobrepõem-se, devem estar ligados
+    assert "B" in grafo["A"]
+    assert "A" in grafo["B"]
 
-def test_propriedade_sozinha():
+    # C está longe, não deve ter vizinhos
+    assert grafo["C"] == set()
+
+def test_geometria_invalida():
     dados = [
-        {"PAR_ID": "10", "OWNER": "Sofia", "Freguesia": "X"}
+        {
+            "PAR_ID": "X",
+            "geometry": "INVALID WKT DATA"
+        }
     ]
-
     grafo = construir_grafo_propriedades(dados)
+    assert grafo == {}  # Não deve gerar nenhum nó
 
-    assert "10" not in grafo  # Sem vizinhos
-
-def test_propriedades_multiplas_na_mesma_freguesia():
+def test_sobreposicao_total():
     dados = [
-        {"PAR_ID": "a", "OWNER": "Dono1", "Freguesia": "F"},
-        {"PAR_ID": "b", "OWNER": "Dono2", "Freguesia": "F"},
-        {"PAR_ID": "c", "OWNER": "Dono3", "Freguesia": "F"},
+        {
+            "PAR_ID": "A",
+            "geometry": "MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)))"
+        },
+        {
+            "PAR_ID": "B",
+            "geometry": "MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)))"
+        }
     ]
-
     grafo = construir_grafo_propriedades(dados)
+    assert "B" in grafo["A"]
 
-    assert grafo["a"] == {"b", "c"}
-    assert grafo["b"] == {"a", "c"}
-    assert grafo["c"] == {"a", "b"}
+def test_varias_conexoes():
+    dados = [
+        {
+            "PAR_ID": "A",
+            "geometry": "MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)))"
+        },
+        {
+            "PAR_ID": "B",
+            "geometry": "MULTIPOLYGON (((1 0, 2 0, 2 1, 1 1, 1 0)))"
+        },
+        {
+            "PAR_ID": "C",
+            "geometry": "MULTIPOLYGON (((0 -1, 1 -1, 1 0, 0 0, 0 -1)))"
+        }
+    ]
+    grafo = construir_grafo_propriedades(dados)
+    assert "B" in grafo["A"]
+    assert "C" in grafo["A"]
+
+def test_ler_csv(tmp_path):
+    # Cria ficheiro CSV temporário
+    ficheiro = tmp_path / "teste.csv"
+    ficheiro.write_text("PAR_ID;geometry\n1;MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)))")
+
+    from grafoPropriedades import ler_csv
+    resultado = ler_csv(str(ficheiro))
+    assert len(resultado) == 1
+    assert resultado[0]["PAR_ID"] == "1"
+
+def test_desenhar_grafo_sem_mostrar():
+    grafo = {"A": {"B"}, "B": {"A"}}
+    desenhar_grafo(grafo, mostrar=False)  # Não abre janela
