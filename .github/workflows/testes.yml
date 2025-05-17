@@ -1,9 +1,11 @@
-name: Python CI
+name: Testes Python
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
-  test:
+  testar:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,5 +24,5 @@ jobs:
           pip install pytest pytest-cov
 
       - name: Correr os testes
-        run: pytest --cov=. --cov-report=term-missing
-  
+        run: |
+          pytest --cov=. --cov-report=term-missing
