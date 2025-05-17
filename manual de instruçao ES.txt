@@ -39,3 +39,4 @@ para aparecer o relatorio num html sera
 bash python -m pytest --cov=grafoPropriedades --cov-report=html testGrafoPropriedades.py
 bash htmlcov/index.html
 DEPOIS temos que fazer para dar para correr todos
+bash python -m pytest --cov=. --cov-report=html   
