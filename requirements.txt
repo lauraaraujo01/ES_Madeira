@@ -3,3 +3,6 @@ matplotlib
 pytest
 pytest-cov
 scipy
+pandas
+shapely
+numpy==1.24

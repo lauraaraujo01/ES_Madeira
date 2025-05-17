@@ -15,17 +15,8 @@ Vai ao site:
 Faz download do instalador.
 
 Na instalação, marca a opção “Add Python to PATH”.
-SE VOCES JA TIVEREM O VEN311 NO VOSSO REPOSITORIO NAO TEM QUE CRIAR O AMBIENTE VIRTUAL, SO TEM QUE INTALAR O PYTHON 3.11 E MUDAR O INTERPETER + REQUIREMETS.TXT. 
-
-Instala normalmente.
 
 
-
-
-
-A partir de agora devera o projeto ser corrido no ven. no terminal devera aparecer assim:
-bash  .\venv311\Scripts\activate -> comando para tivar
-(venv311) PS C:\Users\beatr\Documents\GitHub\ES_Madeira>
 
 mudar o Python: Select Interpreter para  .\venv311\Scripts\python.exe com crl +sft +p  
 📦 3. Instalar as dependências necessárias
@@ -42,6 +33,9 @@ python grafoProprietarios.py
 E o grafo vai aparecer visualmente, sem erros.
 
 PARA TESTAR O COMANDO é:
-python -m pytest testGrafoProprietarios.py
+ bash python -m pytest -v --cov=grafoPropriedades testGrafoPropriedades.py
 
+para aparecer o relatorio num html sera
+bash python -m pytest --cov=grafoPropriedades --cov-report=html testGrafoPropriedades.py
+bash htmlcov/index.html
 DEPOIS temos que fazer para dar para correr todos

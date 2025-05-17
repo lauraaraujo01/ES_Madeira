@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Carrega o ficheiro CSV
-df = pd.read_csv('Madeira-Moodle-1.1.csv', sep=';')
+df = pd.read_csv('Madeira-Moodle-1.2.csv', sep=';')
 
 # Função para calcular a área média com base no nível geográfico e nome da área
 def calcular_area_media(df, nivel, nome):
