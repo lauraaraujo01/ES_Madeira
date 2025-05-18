@@ -22,8 +22,10 @@ def ler_csv_propriedades(caminho_csv):
     return propriedades
 
 def calcular_area_media(propriedades, freguesia_escolhida):
+    # Filtra propriedades da freguesia escolhida
     propriedades_filtradas = [p for p in propriedades if p["Freguesia"] == freguesia_escolhida]
 
+    # Agrupa por dono
     grupos_por_dono = defaultdict(list)
     for prop in propriedades_filtradas:
         grupos_por_dono[prop["OWNER"]].append(prop)
@@ -32,15 +34,23 @@ def calcular_area_media(propriedades, freguesia_escolhida):
 
     for dono, lista in grupos_por_dono.items():
         visitadas = set()
+
         for i, prop in enumerate(lista):
             if i in visitadas:
                 continue
+
             grupo = [prop["geometry"]]
+            stack = [i]
             visitadas.add(i)
-            for j in range(i+1, len(lista)):
-                if j not in visitadas and prop["geometry"].intersects(lista[j]["geometry"]):
-                    grupo.append(lista[j]["geometry"])
-                    visitadas.add(j)
+
+            while stack:
+                atual = stack.pop()
+                for j, outra_prop in enumerate(lista):
+                    if j not in visitadas and lista[atual]["geometry"].intersects(outra_prop["geometry"]):
+                        grupo.append(outra_prop["geometry"])
+                        stack.append(j)
+                        visitadas.add(j)
+
             propriedades_agrupadas.append(unary_union(grupo))
 
     if not propriedades_agrupadas:
