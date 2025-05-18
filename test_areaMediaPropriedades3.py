@@ -1,4 +1,9 @@
 import pandas as pd
+import sys
+sys.path.append('src')
+import sys
+sys.path.append('dados')
+
 from areaMediaPropriedades3 import calcular_area_media
 
 def test_calcular_area_media_valido():

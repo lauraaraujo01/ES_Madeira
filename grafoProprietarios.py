@@ -3,6 +3,9 @@ from collections import defaultdict
 from itertools import combinations
 import networkx as nx
 import matplotlib.pyplot as plt
+import sys
+sys.path.append('dados')
+
 
 def construir_grafo_proprietarios(dados_csv):
     propriedade_para_dono = {}

@@ -4,6 +4,9 @@ from shapely.geometry import Polygon, MultiPolygon
 from collections import defaultdict
 import networkx as nx
 import matplotlib.pyplot as plt
+import sys
+sys.path.append('dados')
+
 
 def construir_grafo_propriedades(dados_csv):
     geometria_por_parcela = {}
