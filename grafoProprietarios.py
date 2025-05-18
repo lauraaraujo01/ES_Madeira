@@ -34,7 +34,7 @@ def ler_csv(caminho):
     with open(caminho, newline='', encoding="utf-8") as f:
         return list(csv.DictReader(f, delimiter=';'))
 
-def desenhar_grafo(grafo, mostrar=True):
+def desenhar_grafo_proprietarios(grafo, mostrar=True):
     import matplotlib.pyplot as plt
     import networkx as nx
 
@@ -82,6 +82,7 @@ def desenhar_grafo(grafo, mostrar=True):
         plt.show()
     else:
         plt.close()
+    return fig
 
 if __name__ == "__main__":
     dados = ler_csv("Madeira-Moodle-1.2.csv")
@@ -90,5 +91,5 @@ if __name__ == "__main__":
   #  for dono, vizinhos in grafo.items():
    #     print(f"{dono}: {', '.join(vizinhos)}")
 
-    desenhar_grafo(grafo)
+    desenhar_grafo_proprietarios(grafo)
 

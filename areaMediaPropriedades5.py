@@ -4,8 +4,6 @@ from collections import defaultdict
 from shapely.wkt import loads as load_wkt
 import csv
 
-
-
 def ler_csv_propriedades(caminho_csv):
     propriedades = []
     with open(caminho_csv, newline='', encoding="utf-8") as f:
@@ -17,17 +15,22 @@ def ler_csv_propriedades(caminho_csv):
                     "PAR_ID": linha["PAR_ID"],
                     "OWNER": linha["OWNER"],
                     "Freguesia": linha["Freguesia"],
+                    "Municipio": linha["Municipio"],
+                    "Ilha": linha["Ilha"],
                     "geometry": geometria
                 })
             except Exception as e:
                 print(f"Erro ao ler linha: {linha}\n{e}")
     return propriedades
 
-def calcular_area_media(propriedades, freguesia_escolhida):
-    # Filtra propriedades da freguesia escolhida
-    propriedades_filtradas = [p for p in propriedades if p["Freguesia"] == freguesia_escolhida]
+def calcular_area_media(propriedades, nivel_geografico, nome_escolhido):
+    propriedades_filtradas = [
+      
+    p for p in propriedades
+    if str(p.get(nivel_geografico, "")).strip().lower() == str(nome_escolhido).strip().lower()
 
-    # Agrupa por dono
+    ]
+
     grupos_por_dono = defaultdict(list)
     for prop in propriedades_filtradas:
         grupos_por_dono[prop["OWNER"]].append(prop)
@@ -61,9 +64,3 @@ def calcular_area_media(propriedades, freguesia_escolhida):
     soma_areas = sum(geom.area for geom in propriedades_agrupadas)
     area_media = soma_areas / len(propriedades_agrupadas)
     return area_media
-
-# Exemplo de uso
-if __name__ == "__main__":
-    propriedades = ler_csv_propriedades("Madeira-Moodle-1.2.csv")
-    media = calcular_area_media(propriedades, "Arco da Calheta")
-    print(f"\n✅ Área média em 'Arco da Calheta': {media:.2f} m2")

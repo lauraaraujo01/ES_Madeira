@@ -15,7 +15,7 @@ def construir_grafo_propriedades(dados_csv):
     for linha in dados_csv:
         par_id = linha["PAR_ID"]
         try:
-            geom = wkt.loads(linha["geometry"])
+            geom = linha["geometry"]
             geometria_por_parcela[par_id] = geom
             grafo.add_node(par_id)
         except Exception as e:
@@ -44,7 +44,7 @@ def ler_csv(caminho_ficheiro):
         leitor = csv.DictReader(csvfile, delimiter=';')
         return list(leitor)
 
-def desenhar_grafo(grafo, mostrar=True):
+def desenhar_grafo_propriedades(grafo, mostrar=True):
     G = nx.Graph()
     for prop, vizinhas in grafo.items():
         for vizinha in vizinhas:
@@ -80,6 +80,8 @@ def desenhar_grafo(grafo, mostrar=True):
     else:
         plt.close()
 
+    return fig
+
 if __name__ == "__main__":
     dados_csv = ler_csv("Madeira-Moodle-1.2.csv")
     grafo = construir_grafo_propriedades(dados_csv)
@@ -87,4 +89,4 @@ if __name__ == "__main__":
     #for propriedade, vizinhas in grafo.items():
      #   print(f"Propriedade {propriedade} tem as vizinhas: {', '.join(vizinhas)}")
 
-    desenhar_grafo(grafo)
+    desenhar_grafo_propriedades(grafo)

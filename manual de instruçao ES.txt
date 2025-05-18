@@ -40,3 +40,6 @@ bash python -m pytest --cov=grafoPropriedades --cov-report=html testGrafoProprie
 bash htmlcov/index.html
 DEPOIS temos que fazer para dar para correr todos
 bash python -m pytest --cov=. --cov-report=html   
+
+COMANDO PARA CORRER A APP
+bash  streamlit run app.py  
