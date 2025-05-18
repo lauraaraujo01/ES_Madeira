@@ -7,7 +7,7 @@ import os
 import csv
 from shapely.wkt import dumps
 
-
+#1
 
 def test_ler_csv_propriedades_funciona():
     # Criar conteúdo CSV temporário com geometria válida
