@@ -1,10 +1,7 @@
 import pytest
-import sys
-sys.path.append('src')
-import sys
-sys.path.append('dados')
 
-from grafoProprietarios import construir_grafo_proprietarios, desenhar_grafo, ler_csv
+
+from grafoProprietarios import construir_grafo_proprietarios, desenhar_grafo_proprietarios, ler_csv
 import tempfile
 import os
 
@@ -49,4 +46,4 @@ def test_ler_csv_funciona_com_ficheiro_temporario():
 
 def test_desenhar_grafo_sem_mostrar():
     grafo = {"A": {"B"}, "B": {"A"}}
-    desenhar_grafo(grafo, mostrar=False)
+    desenhar_grafo_proprietarios(grafo, mostrar=False)

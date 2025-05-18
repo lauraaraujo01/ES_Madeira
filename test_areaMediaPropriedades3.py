@@ -1,3 +1,6 @@
+import pytest
+from shapely.geometry import Polygon
+from areaMediaPropriedades3 import calcular_area_media_simples
 """
 Módulo de testes para a função test_areaMediaPropriedades3
 
@@ -15,52 +18,80 @@ sys.path.append('dados')
 
 from areaMediaPropriedades3 import calcular_area_media
 
+# --- Teste 1: Cálculo válido com geometrias conhecidas ---
 def test_calcular_area_media_valido():
-    """
-    Testa o cálculo da área média quando os dados são válidos.
-
-    Deve retornar 200.0 quando as áreas são 100, 200 e 300
-    na freguesia 'Arco da Calheta'.
-    """
-    df = pd.DataFrame({
-        'Shape_Area': [100, 200, 300],
-        'Freguesia': ['Arco da Calheta'] * 3,
-        'Municipio': ['Calheta'] * 3,
-        'Ilha': ['Madeira'] * 3
-    })
-    resultado = calcular_area_media(df, 'Freguesia', 'Arco da Calheta')
+    propriedades = [
+        {
+            'geometry': Polygon([(0, 0), (0, 10), (10, 10), (10, 0)]),  # Área: 100
+            'Freguesia': 'Arco da Calheta',
+            'Municipio': 'Calheta',
+            'Ilha': 'Madeira'
+        },
+        {
+            'geometry': Polygon([(0, 0), (0, 20), (10, 20), (10, 0)]),  # Área: 200
+            'Freguesia': 'Arco da Calheta',
+            'Municipio': 'Calheta',
+            'Ilha': 'Madeira'
+        },
+        {
+            'geometry': Polygon([(0, 0), (0, 30), (10, 30), (10, 0)]),  # Área: 300
+            'Freguesia': 'Arco da Calheta',
+            'Municipio': 'Calheta',
+            'Ilha': 'Madeira'
+        }
+    ]
+    resultado = calcular_area_media_simples(propriedades, 'Freguesia', 'Arco da Calheta')
     assert resultado == 200.0
 
+
+# --- Teste 2: Nível geográfico inválido ---
 def test_calcular_area_media_nivel_invalido():
-    """
-    Testa o comportamento quando um nível geográfico inválido é fornecido.
+    propriedades = [
+        {
+            'geometry': Polygon([(0, 0), (0, 10), (10, 10), (10, 0)]),
+            'Freguesia': 'Funchal',
+            'Municipio': 'Funchal',
+            'Ilha': 'Madeira'
+        }
+    ]
+    with pytest.raises(ValueError, match="Nível inválido"):
+        calcular_area_media_simples(propriedades, 'Distrito', 'Funchal')
 
-    Deve levantar um ValueError com uma mensagem específica.
-    """
-    df = pd.DataFrame({
-        'Shape_Area': [150],
-        'Freguesia': ['Funchal'],
-        'Municipio': ['Funchal'],
-        'Ilha': ['Madeira']
-    })
-    try:
-        calcular_area_media(df, 'Distrito', 'Funchal')
-    except ValueError as e:
-        assert str(e) == "Nível inválido. Escolha entre 'Freguesia', 'Municipio' ou 'Ilha'."
 
+# --- Teste 3: Nenhuma correspondência encontrada ---
 def test_calcular_area_media_sem_resultados(capsys):
-    """
-    Testa o caso em que não há correspondência para a área geográfica indicada.
-
-    Deve imprimir uma mensagem de aviso e retornar None.
-    """
-    df = pd.DataFrame({
-        'Shape_Area': [150],
-        'Freguesia': ['Funchal'],
-        'Municipio': ['Funchal'],
-        'Ilha': ['Madeira']
-    })
-    resultado = calcular_area_media(df, 'Freguesia', 'Porto Moniz')
+    propriedades = [
+        {
+            'geometry': Polygon([(0, 0), (0, 10), (10, 10), (10, 0)]),
+            'Freguesia': 'Funchal',
+            'Municipio': 'Funchal',
+            'Ilha': 'Madeira'
+        }
+    ]
+    resultado = calcular_area_media_simples(propriedades, 'Freguesia', 'Porto Moniz')
     captured = capsys.readouterr()
     assert "Nenhuma correspondência encontrada para Freguesia = 'Porto Moniz'" in captured.out
     assert resultado is None
+
+
+# --- Teste 4: Cálculo por outro nível (ex: Ilha) ---
+def test_calcular_area_media_por_ilha():
+    propriedades = [
+        {
+            'geometry': Polygon([(0, 0), (0, 10), (10, 10), (10, 0)]),  # Área: 100
+            'Freguesia': 'X',
+            'Municipio': 'Y',
+            'Ilha': 'Madeira'
+        },
+        {
+            'geometry': Polygon([(0, 0), (0, 30), (10, 30), (10, 0)]),  # Área: 300
+            'Freguesia': 'A',
+            'Municipio': 'B',
+            'Ilha': 'Madeira'
+        }
+    ]
+    resultado = calcular_area_media_simples(propriedades, 'Ilha', 'Madeira')
+    assert resultado == 200.0
+
+
+

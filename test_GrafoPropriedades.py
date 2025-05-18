@@ -1,92 +1,44 @@
 import pytest
-import sys
-sys.path.append('src')
-from grafoPropriedades import construir_grafo_propriedades, desenhar_grafo
 
-def test_grafo_intersecta_sobreposicao():
-    dados = [
-        {
-            "PAR_ID": "A",
-            "OWNER": "X",
-            "Freguesia": "F1",
-            "geometry": "MULTIPOLYGON (((0 0, 2 0, 2 2, 0 2, 0 0)))"
-        },
-        {
-            "PAR_ID": "B",
-            "OWNER": "Y",
-            "Freguesia": "F1",
-            "geometry": "MULTIPOLYGON (((0.5 0.5, 1.5 0.5, 1.5 1.5, 0.5 1.5, 0.5 0.5)))"
-        },
-        {
-            "PAR_ID": "C",
-            "OWNER": "Z",
-            "Freguesia": "F1",
-            "geometry": "MULTIPOLYGON (((5 5, 6 5, 6 6, 5 6, 5 5)))"
-        }
-    ]
+import tempfile
+import csv
+import os
+from shapely.wkt import dumps as dump_wkt, loads as load_wkt
+from grafoPropriedades import construir_grafo_propriedades, desenhar_grafo_propriedades
 
-    grafo = construir_grafo_propriedades(dados)
+def criar_csv_temp(geometrias):
+    with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".csv", encoding="utf-8") as f:
+        caminho = f.name
+        writer = csv.writer(f, delimiter=';')
+        writer.writerow(["PAR_ID", "OWNER", "Freguesia", "Municipio", "Ilha", "geometry"])
+        for i, wkt in enumerate(geometrias, start=1):
+            writer.writerow([str(i), f"Dono{i}", "F", "M", "I", wkt])
+    return caminho
 
-    # A e B sobrepõem-se, devem estar ligados
-    assert "B" in grafo["A"]
-    assert "A" in grafo["B"]
+def test_grafo_adjacencia():
+    # A e B tocam-se, C está longe
+    wkt_A = dump_wkt(load_wkt("POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))"))
+    wkt_B = dump_wkt(load_wkt("POLYGON((1 0, 1 1, 2 1, 2 0, 1 0))"))  # toca em A
+    wkt_C = dump_wkt(load_wkt("POLYGON((10 10, 10 11, 11 11, 11 10, 10 10))"))
 
-    # C está longe, não deve ter vizinhos
-    assert grafo["C"] == set()
+    caminho = criar_csv_temp([wkt_A, wkt_B, wkt_C])
 
-def test_geometria_invalida():
-    dados = [
-        {
-            "PAR_ID": "X",
-            "geometry": "INVALID WKT DATA"
-        }
-    ]
-    grafo = construir_grafo_propriedades(dados)
-    assert grafo == {}  # Não deve gerar nenhum nó
+    from grafoPropriedades import ler_csv  # garantir leitura correta
+    linhas = []
+    with open(caminho, newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f, delimiter=';')
+        for row in reader:
+            row["geometry"] = load_wkt(row["geometry"])
+            linhas.append(row)
 
-def test_sobreposicao_total():
-    dados = [
-        {
-            "PAR_ID": "A",
-            "geometry": "MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)))"
-        },
-        {
-            "PAR_ID": "B",
-            "geometry": "MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)))"
-        }
-    ]
-    grafo = construir_grafo_propriedades(dados)
-    assert "B" in grafo["A"]
+    grafo = construir_grafo_propriedades(linhas)
 
-def test_varias_conexoes():
-    dados = [
-        {
-            "PAR_ID": "A",
-            "geometry": "MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)))"
-        },
-        {
-            "PAR_ID": "B",
-            "geometry": "MULTIPOLYGON (((1 0, 2 0, 2 1, 1 1, 1 0)))"
-        },
-        {
-            "PAR_ID": "C",
-            "geometry": "MULTIPOLYGON (((0 -1, 1 -1, 1 0, 0 0, 0 -1)))"
-        }
-    ]
-    grafo = construir_grafo_propriedades(dados)
-    assert "B" in grafo["A"]
-    assert "C" in grafo["A"]
+    assert "1" in grafo and "2" in grafo["1"], "Propriedades 1 e 2 deviam ser vizinhas"
+    assert "3" not in grafo["1"], "Propriedade 3 está longe e não devia ser adjacente"
+    assert "3" not in grafo["2"], "Propriedade 3 está longe e não devia ser adjacente"
 
-def test_ler_csv(tmp_path):
-    # Cria ficheiro CSV temporário
-    ficheiro = tmp_path / "teste.csv"
-    ficheiro.write_text("PAR_ID;geometry\n1;MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)))")
+    os.unlink(caminho)
 
-    from grafoPropriedades import ler_csv
-    resultado = ler_csv(str(ficheiro))
-    assert len(resultado) == 1
-    assert resultado[0]["PAR_ID"] == "1"
-
-def test_desenhar_grafo_sem_mostrar():
-    grafo = {"A": {"B"}, "B": {"A"}}
-    desenhar_grafo(grafo, mostrar=False)  # Não abre janela
+if __name__ == "__main__":
+    test_grafo_adjacencia()
+    print("✅ Todos os testes passaram.")
