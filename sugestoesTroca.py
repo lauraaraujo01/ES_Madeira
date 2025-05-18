@@ -5,6 +5,10 @@ import csv
 
 from areaMediaPropriedades5 import calcular_area_media
 
+
+
+
+
 def ler_csv_propriedades(caminho_csv):
     propriedades = []
     with open(caminho_csv, newline='', encoding="utf-8") as f:
