@@ -1,7 +1,31 @@
 from shapely.geometry import Polygon
 from sugestoesTroca import sugerir_trocas
 
-def test_troca_com_mais_de_um_dono():
+#1
+
+def test_ler_csv_propriedades_funciona():
+    # Criar conteúdo CSV temporário com geometria válida
+    geometria = "POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))"
+    conteudo = "PAR_ID;OWNER;Freguesia;geometry\n" \
+               "1;Ana;X;\"" + geometria + "\"\n"
+
+    with tempfile.NamedTemporaryFile("w", delete=False, suffix=".csv", encoding="utf-8") as f:
+        f.write(conteudo)
+        caminho = f.name
+
+    try:
+        propriedades = ler_csv_propriedades(caminho)
+        assert len(propriedades) == 1
+        prop = propriedades[0]
+        assert prop["PAR_ID"] == "1"
+        assert prop["OWNER"] == "Ana"
+        assert prop["Freguesia"] == "X"
+        assert prop["geometry"].area == 1.0
+        assert abs(prop["area"] - 1.0) < 0.0001
+    finally:
+        os.remove(caminho)  # apagar ficheiro temporário
+
+def test_sugerir_trocas_retorna_lista():
     propriedades = [
         {
             "PAR_ID": "1",

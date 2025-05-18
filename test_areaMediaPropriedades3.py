@@ -1,6 +1,22 @@
 import pytest
 from shapely.geometry import Polygon
 from areaMediaPropriedades3 import calcular_area_media_simples
+"""
+Módulo de testes para a função test_areaMediaPropriedades3
+
+Este módulo testa a função test_areaMediaPropriedades3 do ficheiro areaMediaPropriedades3.py.
+São verificadas:
+- Cálculo correto em caso de dados válidos
+- Erro quando o nível geográfico é inválido
+- Retorno adequado e mensagem quando não há correspondência
+"""
+import pandas as pd
+import sys
+sys.path.append('src')
+import sys
+sys.path.append('dados')
+
+from areaMediaPropriedades3 import calcular_area_media
 
 # --- Teste 1: Cálculo válido com geometrias conhecidas ---
 def test_calcular_area_media_valido():

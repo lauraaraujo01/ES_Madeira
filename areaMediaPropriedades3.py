@@ -1,3 +1,12 @@
+"""
+Módulo areaMediaPropriedades
+
+Este módulo permite calcular a área média das propriedades rústicas em diferentes níveis geográficos
+(freguesia, município ou ilha), a partir de um ficheiro CSV com os dados de cadastro.
+
+Funções:
+- calcular_area_media(df, nivel, nome): Calcula a área média das propriedades para a área geográfica indicada.
+"""
 import pandas as pd
 import csv 
 from shapely.geometry import shape
@@ -27,6 +36,16 @@ def ler_csv_propriedades(caminho_csv):
 
 # Função para calcular a área média com base no nível geográfico e nome da área
 def calcular_area_media_simples(propriedades, nivel, nome):
+
+    """
+    Calcula a área média das propriedades para um nível geográfico e nome específicos.
+
+    :param df: DataFrame com os dados das propriedades.
+    :param nivel: Nível geográfico a considerar ('Freguesia', 'Municipio' ou 'Ilha').
+    :param nome: Nome da área geográfica (ex: 'Arco da Calheta').
+    :return: Área média das propriedades na área indicada, ou None se não for encontrada.
+    :raises ValueError: Se o nível indicado não for válido.
+    """
     if nivel not in ['Freguesia', 'Municipio', 'Ilha']:
         raise ValueError("Nível inválido. Escolha entre 'Freguesia', 'Municipio' ou 'Ilha'.")
 
