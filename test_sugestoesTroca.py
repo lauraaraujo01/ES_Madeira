@@ -7,7 +7,7 @@ import os
 import csv
 from shapely.wkt import dumps
 import sys
-sys.path.append('dados')
+
 
 
 

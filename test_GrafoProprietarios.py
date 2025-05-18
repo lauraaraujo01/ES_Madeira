@@ -1,8 +1,5 @@
 import pytest
-import sys
-sys.path.append('src')
-import sys
-sys.path.append('dados')
+
 
 from grafoProprietarios import construir_grafo_proprietarios, desenhar_grafo, ler_csv
 import tempfile

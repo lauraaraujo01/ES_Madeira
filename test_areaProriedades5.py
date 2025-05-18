@@ -3,8 +3,7 @@ import tempfile
 import os
 import csv
 from shapely.wkt import dumps as dump_wkt, loads as load_wkt
-import sys
-sys.path.append('src')
+
 from areaMediaPropriedades5 import ler_csv_propriedades, calcular_area_media 
 
 def test_area_media_proprietarios_mesma_freguesia():

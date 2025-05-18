@@ -3,8 +3,7 @@ from shapely.ops import unary_union
 from collections import defaultdict
 from shapely.wkt import loads as load_wkt
 import csv
-import sys
-sys.path.append('dados')
+
 
 
 def ler_csv_propriedades(caminho_csv):

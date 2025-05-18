@@ -2,8 +2,7 @@ from shapely.wkt import loads as load_wkt
 from shapely.ops import unary_union
 from collections import defaultdict
 import csv
-import sys
-sys.path.append('dados')
+
 
 from areaMediaPropriedades5 import calcular_area_media
 

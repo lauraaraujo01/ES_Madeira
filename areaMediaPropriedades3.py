@@ -1,6 +1,5 @@
 import pandas as pd
-import sys
-sys.path.append('dados')
+
 
 # Carrega o ficheiro CSV
 df = pd.read_csv('Madeira-Moodle-1.2.csv', sep=';')
