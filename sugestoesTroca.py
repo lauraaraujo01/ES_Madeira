@@ -1,3 +1,16 @@
+"""
+Módulo sugestoes_troca
+
+Este módulo permite sugerir trocas de propriedades entre proprietários com o objetivo
+de aumentar a área média agrupada por proprietário em uma freguesia específica.
+
+As sugestões são avaliadas com base na melhoria da área média e na similaridade das áreas envolvidas.
+
+Funções:
+- ler_csv_propriedades(caminho_csv): Lê o CSV e converte geometrias para objetos Shapely.
+- sugerir_trocas(propriedades, freguesia_escolhida): Gera as 5 melhores sugestões de trocas entre proprietários.
+"""
+
 from shapely.wkt import loads as load_wkt
 from shapely.ops import unary_union
 from collections import defaultdict
@@ -8,10 +21,17 @@ sys.path.append('dados')
 from areaMediaPropriedades5 import calcular_area_media
 
 
-
-
-
 def ler_csv_propriedades(caminho_csv):
+
+     """
+    Lê um ficheiro CSV contendo propriedades com geometria WKT e retorna uma lista de dicionários.
+
+    Cada dicionário contém o ID da parcela, proprietário, freguesia, geometria como objeto Shapely
+    e a área calculada automaticamente.
+
+    :param caminho_csv: Caminho para o ficheiro CSV.
+    :return: Lista de propriedades como dicionários.
+    """
     propriedades = []
     with open(caminho_csv, newline='', encoding="utf-8") as f:
         leitor = csv.DictReader(f, delimiter=';')
@@ -30,6 +50,20 @@ def ler_csv_propriedades(caminho_csv):
     return propriedades
 
 def sugerir_trocas(propriedades, freguesia_escolhida):
+
+    """
+    Sugere trocas entre proprietários na freguesia indicada que possam aumentar a área média
+    agrupada por proprietário.
+
+    A troca considera:
+    - Ganho na área média após a troca
+    - Diferença de áreas entre as propriedades trocadas
+    - Uma métrica de "potencial", que valoriza trocas com ganho relevante e baixo desequilíbrio
+
+    :param propriedades: Lista de propriedades como dicionários.
+    :param freguesia_escolhida: Nome da freguesia para aplicar a sugestão de trocas.
+    :return: Lista com até 5 sugestões ordenadas por maior potencial.
+    """
     props = [p for p in propriedades if p["Freguesia"] == freguesia_escolhida]
     sugestoes = []
 

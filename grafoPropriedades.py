@@ -1,3 +1,16 @@
+"""
+Módulo grafo_propriedades
+
+Este módulo constrói e desenha um grafo de adjacência entre parcelas rústicas com base na geometria
+espacial definida em formato WKT. Utiliza a biblioteca Shapely para detetar interseções entre parcelas,
+criando arestas entre parcelas adjacentes.
+
+Funções:
+- ler_csv(caminho_ficheiro): Lê os dados geográficos a partir de um ficheiro CSV.
+- construir_grafo_propriedades(dados_csv): Constrói um grafo de adjacência real com base nas geometrias.
+- desenhar_grafo(grafo, mostrar): Desenha o grafo de propriedades adjacentes.
+"""
+
 import csv
 from shapely import wkt
 from shapely.geometry import Polygon, MultiPolygon
@@ -9,6 +22,13 @@ sys.path.append('dados')
 
 
 def construir_grafo_propriedades(dados_csv):
+     """
+    Constrói um grafo onde cada nó representa uma propriedade e as arestas representam adjacência real
+    (interseção espacial) entre elas, com base na geometria fornecida em WKT.
+
+    :param dados_csv: Lista de dicionários com dados da geometria das parcelas.
+    :return: Dicionário no formato {parcela: set(vizinhas)} representando o grafo de adjacência.
+    """
     geometria_por_parcela = {}
     grafo = nx.Graph()
 
@@ -41,11 +61,23 @@ def construir_grafo_propriedades(dados_csv):
     return grafo_dict
 
 def ler_csv(caminho_ficheiro):
+    """
+    Lê um ficheiro CSV com delimitador ';' e retorna uma lista de dicionários.
+
+    :param caminho_ficheiro: Caminho do ficheiro CSV.
+    :return: Lista de linhas como dicionários.
+    """
     with open(caminho_ficheiro, newline='', encoding="utf-8") as csvfile:
         leitor = csv.DictReader(csvfile, delimiter=';')
         return list(leitor)
 
 def desenhar_grafo(grafo, mostrar=True):
+    """
+    Desenha o grafo de adjacência entre propriedades usando NetworkX e matplotlib.
+
+    :param grafo: Dicionário onde as chaves são parcelas e os valores são conjuntos de parcelas vizinhas.
+    :param mostrar: Booleano. Se True, mostra o grafo na janela gráfica. Se False, fecha após criar a figura.
+    """
     G = nx.Graph()
     for prop, vizinhas in grafo.items():
         for vizinha in vizinhas:

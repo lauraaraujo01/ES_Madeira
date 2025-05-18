@@ -1,3 +1,15 @@
+"""
+Módulo GrafoProprietarios
+
+Este módulo constrói e desenha um grafo que representa as relações de vizinhança entre proprietários
+de terrenos rústicos, com base nos dados de cadastro fornecidos em formato CSV.
+
+Funções:
+- ler_csv(caminho): Lê os dados do ficheiro CSV.
+- construir_grafo_proprietarios(dados_csv): Constrói o grafo de vizinhança entre proprietários.
+- desenhar_grafo(grafo, mostrar): Desenha o grafo utilizando o matplotlib e networkx.
+"""
+
 import csv
 from collections import defaultdict
 from itertools import combinations
@@ -7,7 +19,17 @@ import sys
 sys.path.append('dados')
 
 
+
 def construir_grafo_proprietarios(dados_csv):
+    """
+    Constrói um grafo de vizinhança entre proprietários a partir dos dados do cadastro.
+
+    Cada proprietário é um nó. Existe uma aresta entre dois proprietários se possuírem
+    propriedades na mesma freguesia.
+
+    :param dados_csv: Lista de dicionários com os dados lidos do ficheiro CSV.
+    :return: Dicionário com os proprietários como chaves e conjuntos de vizinhos como valores.
+    """
     propriedade_para_dono = {}
     freguesia_para_propriedades = defaultdict(list)
 
@@ -32,10 +54,22 @@ def construir_grafo_proprietarios(dados_csv):
     return grafo_proprietarios
 
 def ler_csv(caminho):
+    """
+    Lê um ficheiro CSV com delimitador ';' e retorna uma lista de dicionários.
+
+    :param caminho: Caminho para o ficheiro CSV.
+    :return: Lista de dicionários representando cada linha.
+    """
     with open(caminho, newline='', encoding="utf-8") as f:
         return list(csv.DictReader(f, delimiter=';'))
 
 def desenhar_grafo(grafo, mostrar=True):
+    """
+    Desenha o grafo de vizinhança entre proprietários.
+
+    :param grafo: Dicionário onde as chaves são IDs de proprietários e os valores são conjuntos de vizinhos.
+    :param mostrar: Booleano. Se True, mostra o grafo na tela. Se False, apenas prepara a figura.
+    """
     import matplotlib.pyplot as plt
     import networkx as nx
 

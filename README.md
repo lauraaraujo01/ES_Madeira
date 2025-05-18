@@ -4,6 +4,7 @@
 Grupo: [Engenharia de Software Grupo de Trabalho 2]  
 Projeto desenvolvido no âmbito da unidade curricular [Engenharia de Software], [ISCTE-IUL].  
 
+
 ## Membros do Grupo
 - Nome: [Laura Araújo]  
   - Número de Estudante: [120021]
