@@ -1,4 +1,6 @@
 import pytest
+import sys
+sys.path.append('src')
 from grafoPropriedades import construir_grafo_propriedades, desenhar_grafo
 
 def test_grafo_intersecta_sobreposicao():
